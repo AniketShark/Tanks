@@ -44,6 +44,24 @@ public partial class @ActionMaps: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""eee35ad1-da75-4fb4-b782-a9fa68c3e720"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Special"",
+                    ""type"": ""Button"",
+                    ""id"": ""603fdda5-bbf7-426c-9354-849d3f40fc98"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +130,28 @@ public partial class @ActionMaps: IInputActionCollection2, IDisposable
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3318555d-ca1f-4b89-a720-a38f20640d55"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""108f4e0b-3d12-4699-831b-522cd01eb76b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Special"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -128,6 +168,8 @@ public partial class @ActionMaps: IInputActionCollection2, IDisposable
         m_Tank = asset.FindActionMap("Tank", throwIfNotFound: true);
         m_Tank_Move = m_Tank.FindAction("Move", throwIfNotFound: true);
         m_Tank_Aim = m_Tank.FindAction("Aim", throwIfNotFound: true);
+        m_Tank_Fire = m_Tank.FindAction("Fire", throwIfNotFound: true);
+        m_Tank_Special = m_Tank.FindAction("Special", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -191,12 +233,16 @@ public partial class @ActionMaps: IInputActionCollection2, IDisposable
     private List<ITankActions> m_TankActionsCallbackInterfaces = new List<ITankActions>();
     private readonly InputAction m_Tank_Move;
     private readonly InputAction m_Tank_Aim;
+    private readonly InputAction m_Tank_Fire;
+    private readonly InputAction m_Tank_Special;
     public struct TankActions
     {
         private @ActionMaps m_Wrapper;
         public TankActions(@ActionMaps wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Tank_Move;
         public InputAction @Aim => m_Wrapper.m_Tank_Aim;
+        public InputAction @Fire => m_Wrapper.m_Tank_Fire;
+        public InputAction @Special => m_Wrapper.m_Tank_Special;
         public InputActionMap Get() { return m_Wrapper.m_Tank; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -212,6 +258,12 @@ public partial class @ActionMaps: IInputActionCollection2, IDisposable
             @Aim.started += instance.OnAim;
             @Aim.performed += instance.OnAim;
             @Aim.canceled += instance.OnAim;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
+            @Special.started += instance.OnSpecial;
+            @Special.performed += instance.OnSpecial;
+            @Special.canceled += instance.OnSpecial;
         }
 
         private void UnregisterCallbacks(ITankActions instance)
@@ -222,6 +274,12 @@ public partial class @ActionMaps: IInputActionCollection2, IDisposable
             @Aim.started -= instance.OnAim;
             @Aim.performed -= instance.OnAim;
             @Aim.canceled -= instance.OnAim;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
+            @Special.started -= instance.OnSpecial;
+            @Special.performed -= instance.OnSpecial;
+            @Special.canceled -= instance.OnSpecial;
         }
 
         public void RemoveCallbacks(ITankActions instance)
@@ -252,5 +310,7 @@ public partial class @ActionMaps: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
+        void OnSpecial(InputAction.CallbackContext context);
     }
 }
