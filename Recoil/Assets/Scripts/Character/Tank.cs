@@ -12,10 +12,6 @@ public class Tank : MonoBehaviour
 	public ActionMaps actionMaps;
 
 	private Vector3 mousePos;
-	private void Start()
-	{
-		print("Start");
-	}
 
 	public void OnEnable()
 	{
@@ -23,7 +19,6 @@ public class Tank : MonoBehaviour
 		{
 			actionMaps = new ActionMaps();
 		}
-		print("OnEnable");
 		actionMaps.Tank.Fire.performed += OnFire;
 		actionMaps.Tank.Special.performed += OnSpecial;
 		actionMaps.Enable();
@@ -31,12 +26,10 @@ public class Tank : MonoBehaviour
 
 	private void OnSpecial(InputAction.CallbackContext context)
 	{
-		print("special");
 	}
 
 	private void OnFire(InputAction.CallbackContext context)
 	{
-		print("fire");
 		barrel.FireShell();
 	}
 

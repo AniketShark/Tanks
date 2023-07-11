@@ -9,6 +9,8 @@
 /Recoil/[Bb]uilds/
 /Recoil/[Ll]ogs/
 /Recoil/[Uu]ser[Ss]ettings/
+/Recoil/MemoryCaptures/
+/Builds/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
