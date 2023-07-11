@@ -10,7 +10,7 @@ public class Shell : MonoBehaviour
 	}
 	public void Move(Vector3 direction)
 	{
-	}
+	} 
 	public void Update()
 	{
 		transform.position += transform.forward * speed * Time.deltaTime;
