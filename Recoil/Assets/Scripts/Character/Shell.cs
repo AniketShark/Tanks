@@ -1,18 +1,32 @@
 using UnityEngine;
-
-public class Shell : MonoBehaviour
+using ObjectPooling;
+public class Shell : MonoBehaviour, IPoolable
 {
 	public float speed;
-
-	public void OnEnable()
+	public IObjectPool PoolParent { get; set; }
+	public void Init(IObjectPool objetctPool)
 	{
-		Destroy(gameObject,2);
+		PoolParent = objetctPool;
+	}
+
+	public void Launch()
+	{
+		gameObject.SetActive(true);
+		Invoke("Return",2.0f);
 	}
 	public void Move(Vector3 direction)
 	{
-	} 
+		transform.position += direction * speed * Time.deltaTime;
+	}
 	public void Update()
 	{
-		transform.position += transform.forward * speed * Time.deltaTime;
+		Move(transform.forward);
 	}
+	public void Return()
+	{
+		CancelInvoke("Return");
+		gameObject.SetActive(false);
+		PoolParent.ReturnToPool(gameObject);
+	}
+
 }

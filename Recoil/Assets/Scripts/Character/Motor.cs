@@ -6,8 +6,10 @@ public class Motor : MonoBehaviour
 {
 	public float speed;
 	public float rotationalSpeed;
-	public Vector3 moveDirection = Vector3.forward;
-	public Vector3 lookDirection = Vector3.forward;
+	private Vector3 moveDirection = Vector3.forward;
+	private Vector3 lookDirection = Vector3.forward;
+
+
 	public void Move(Vector2 direction)
 	{
 		moveDirection.x = direction.x;

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pooledObjects:
   - prefab: {fileID: 757645391784135386, guid: fe87f808be5192042bcf53c53f900f20, type: 3}
-    instances: 10
+    instances: 30

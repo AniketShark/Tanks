@@ -1,57 +1,60 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
+using ObjectPooling;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Tank : MonoBehaviour
+public class Tank : MonoBehaviour, IPoolable
 {
 	public Motor motor;
 	public Barrel barrel;
-	public ActionMaps actionMaps;
-
 	private Vector3 mousePos;
+	private Vector2 moveDirection;
+	private bool move;
+	public IObjectPool PoolParent { get; set; }
 
-	public void OnEnable()
+	public void Init(IObjectPool objetctPool)
 	{
-		if(actionMaps == null)
-		{
-			actionMaps = new ActionMaps();
-		}
-		actionMaps.Tank.Fire.performed += OnFire;
-		actionMaps.Tank.Special.performed += OnSpecial;
-		actionMaps.Enable();
+		PoolParent = objetctPool;
+		barrel.Init(PoolParent);
 	}
 
-	private void OnSpecial(InputAction.CallbackContext context)
+	public void Destroy()
 	{
-	}
-
-	private void OnFire(InputAction.CallbackContext context)
-	{
-		barrel.FireShell();
+		Return();
 	}
 
 	private void Update()
 	{
-		if (actionMaps.Tank.Move.inProgress)
+		if(move)
 		{
-			motor.Move(actionMaps.Tank.Move.ReadValue<Vector2>());
+			motor.Move(moveDirection);
 		}
-		if (actionMaps.Tank.Aim.inProgress)
-		{
-			mousePos = actionMaps.Tank.Aim.ReadValue<Vector2>();
-			mousePos = CameraUtility.MouseToWorldHitPoint(mousePos);
-			barrel.Aim(mousePos,transform.position);
-		} 
 	}
 
-
-	private void OnDisable()
+	public void OnSpecial(InputAction.CallbackContext context)
 	{
-		actionMaps.Tank.Fire.performed -= OnFire;
-		actionMaps.Tank.Special.performed -= OnSpecial;
-		actionMaps.Disable();
+		print("OnSpecial");
+	}
+
+	public void OnFire(InputAction.CallbackContext context)
+	{
+		if(context.performed) barrel.FireShell();
+	}
+
+	public void OnMove(InputAction.CallbackContext context)
+	{
+		move = context.performed;
+		moveDirection = context.ReadValue<Vector2>();
+	}
+
+	public void OnAim(InputAction.CallbackContext context)
+	{
+		mousePos = CameraUtility.MouseToWorldHitPoint(context.ReadValue<Vector2>());
+		barrel.Aim(mousePos, transform.position);
+	}
+
+	public void Return()
+	{
+		gameObject.SetActive(false);
+		PoolParent.ReturnToPool(gameObject);
 	}
 }

@@ -1,3 +1,5 @@
+using ObjectPooling;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +10,12 @@ public class Barrel : MonoBehaviour
 	public Shell shell;
 	public Vector3 lookVector;
 	public float aimSpeed;
+	private IObjectPool objectPool;
+
+	public void Init(IObjectPool objectPool)
+	{
+		this.objectPool = objectPool;
+	}
 
 	public void Aim(Vector3 mouseWorldPosition, Vector3 tankPosition)
 	{
@@ -15,11 +23,14 @@ public class Barrel : MonoBehaviour
 		lookVector.y = 0;
 		lookVector = lookVector.normalized;
 		Quaternion lookRotation = Quaternion.LookRotation(lookVector, Vector3.up);
-		transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, aimSpeed * Time.deltaTime);
+		transform.rotation = lookRotation;//Quaternion.Lerp(transform.rotation, lookRotation, aimSpeed * Time.deltaTime);
 	}
 
 	public void FireShell()
 	{
-		Shell shellInstance = Instantiate<Shell>(shell,muzzle.position,muzzle.rotation);
+		GameObject shellInstance = objectPool.GetPooledObject(shell.GetType());
+		shellInstance.transform.position = muzzle.position;
+		shellInstance.transform.rotation = muzzle.rotation;
+		shellInstance.GetComponent<Shell>().Launch();
 	}
 }

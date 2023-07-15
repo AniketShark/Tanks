@@ -3,15 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class PrefabInfo
+namespace ObjectPooling
 {
-	public GameObject prefab;
-	public int instances;
-}
+	public interface IPoolable
+	{
+		public void Init(IObjectPool objetctPool);
+		IObjectPool PoolParent { get; set; }
+		void Return();
+	}
 
-[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/ObjectPoolInfo", order = 1)]
-public class ObjectPoolInfo : ScriptableObject
-{
-   public List<PrefabInfo> pooledObjects;
+	[Serializable]
+	public class PrefabInfo
+	{
+		public GameObject prefab;
+		public int instances;
+	}
+
+	[CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/ObjectPoolInfo", order = 1)]
+	public class ObjectPoolInfo : ScriptableObject
+	{
+		public List<PrefabInfo> pooledObjects;
+	}
 }
