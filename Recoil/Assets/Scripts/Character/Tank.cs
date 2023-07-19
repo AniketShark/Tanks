@@ -1,20 +1,26 @@
 using ObjectPooling;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 public class Tank : MonoBehaviour, IPoolable
 {
 	public Motor motor;
 	public Barrel barrel;
-	private Vector3 mousePos;
+	private Vector3 currentMousePos;
+	private Vector3 lastMouseMovePos;
 	private Vector2 moveDirection;
 	private bool move;
+	private bool aim;
+	private ActionMaps actionMap;
 	public IObjectPool PoolParent { get; set; }
 
 	public void Init(IObjectPool objetctPool)
 	{
 		PoolParent = objetctPool;
 		barrel.Init(PoolParent);
+		actionMap = new ActionMaps();
+		actionMap.Enable();
 	}
 
 	public void Destroy()
@@ -24,6 +30,7 @@ public class Tank : MonoBehaviour, IPoolable
 
 	private void Update()
 	{
+		currentMousePos = actionMap.Tank.Aim.ReadValue<Vector2>();
 		if(move)
 		{
 			motor.Move(moveDirection);
@@ -32,7 +39,6 @@ public class Tank : MonoBehaviour, IPoolable
 
 	public void OnSpecial(InputAction.CallbackContext context)
 	{
-		print("OnSpecial");
 	}
 
 	public void OnFire(InputAction.CallbackContext context)
@@ -48,8 +54,10 @@ public class Tank : MonoBehaviour, IPoolable
 
 	public void OnAim(InputAction.CallbackContext context)
 	{
-		mousePos = CameraUtility.MouseToWorldHitPoint(context.ReadValue<Vector2>());
-		barrel.Aim(mousePos, transform.position);
+		if(context.control.displayName == "Right Stick")
+			barrel.AimUsingDirection(context.ReadValue<Vector2>());
+		else
+			barrel.AimUsingMouseWorld(CameraUtility.MouseToWorldHitPoint(context.ReadValue<Vector2>()));
 	}
 
 	public void Return()
