@@ -20,8 +20,6 @@ public class UserInput : MonoBehaviour
 		{
 			actionMaps = new ActionMaps();
 		}
-		actionMaps.Tank.Fire.performed += OnFire;
-		actionMaps.Tank.Special.performed += OnSpecial;
 		actionMaps.Enable();
 	}
 

@@ -11,33 +11,22 @@ public class Barrel : MonoBehaviour
 	public float aimSpeed;
 	private Vector3 lookVector;
 	private IObjectPool objectPool;
+	private float lookDirectionDiff = 0;
 	public void Init(IObjectPool objectPool)
 	{
 		this.objectPool = objectPool;
 	}
 
-	public void AimUsingMouseWorld(Vector3 mouseWorldPosition)
-	{
-		lookVector = mouseWorldPosition - transform.position;
-		lookVector.y = 0;
-		lookVector = lookVector.normalized;
-		Quaternion lookRotation = Quaternion.LookRotation(lookVector, Vector3.up);
-		transform.rotation = lookRotation;
-	}
-
 	public void AimUsingDirection(Vector3 lookDirection)
 	{
+		print("Look Direction magnitude : " + lookDirection.magnitude);
+		if (lookDirection.magnitude < 0.99f)
+			return;
 		lookVector.x = lookDirection.x;
 		lookVector.z = lookDirection.y;
 		lookVector.y = 0;
 		Quaternion lookRotation = Quaternion.LookRotation(lookVector, Vector3.up);
-		transform.rotation      = Quaternion.Lerp(transform.rotation, lookRotation, aimSpeed * Time.deltaTime);
-	}
-
-	public void Idle(Vector3 tankForward)
-    {
-		Quaternion lookRotation = Quaternion.LookRotation(tankForward, Vector3.up);
-		transform.rotation      = Quaternion.Lerp(transform.rotation, lookRotation, aimSpeed * Time.deltaTime);
+		transform.rotation = lookRotation;//Quaternion.Lerp(transform.rotation, lookRotation, aimSpeed * Time.deltaTime);
 	}
 
 	public void FireShell()

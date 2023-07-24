@@ -124,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   motor: {fileID: 703830888153764811}
   barrel: {fileID: 6677752110116786339}
+  input: {fileID: 0}
 --- !u!114 &703830888153764811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,7 +313,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   muzzle: {fileID: 8980634562789910752}
   shell: {fileID: 4645177225090889975, guid: fe87f808be5192042bcf53c53f900f20, type: 3}
-  lookVector: {x: 0, y: 0, z: 1}
   aimSpeed: 5
 --- !u!1 &5621780920694568287
 GameObject:
