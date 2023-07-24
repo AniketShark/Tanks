@@ -9,7 +9,7 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "5f6b6e73-8a40-451d-9c96-f3f9d4e4b926",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Dpad",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true

@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 2294020092085348157}
   - component: {fileID: 1862600057337128258}
   - component: {fileID: 703830888153764811}
+  - component: {fileID: 5020542244324157846}
+  - component: {fileID: 3333541576081075995}
   - component: {fileID: -2973423775417341288}
   m_Layer: 0
   m_Name: Tank
@@ -37,7 +39,7 @@ Transform:
   - {fileID: 1102711628903074028}
   - {fileID: 4162061846737620460}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3183068737319575006
 MeshFilter:
@@ -123,8 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   motor: {fileID: 703830888153764811}
-  barrel: {fileID: 6677752110116786339}
-  input: {fileID: 0}
+  barrel: {fileID: 5020542244324157846}
 --- !u!114 &703830888153764811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +140,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   rotationalSpeed: 5
+--- !u!114 &5020542244324157846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084592128523865350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0377a24cf1d768e4887c7399e43daa86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barrelTransform: {fileID: 1102711628903074028}
+  muzzle: {fileID: 8980634562789910752}
+  shell: {fileID: 4645177225090889975, guid: fe87f808be5192042bcf53c53f900f20, type: 3}
+  aimSpeed: 5
+--- !u!114 &3333541576081075995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1084592128523865350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58413dc584d21694e97a77025d4163c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-2973423775417341288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,7 +303,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1102711628903074028}
-  - component: {fileID: 6677752110116786339}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -299,21 +327,6 @@ Transform:
   m_Father: {fileID: 1500691493037831459}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 1.6, z: 0}
---- !u!114 &6677752110116786339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3146408840760380684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0377a24cf1d768e4887c7399e43daa86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  muzzle: {fileID: 8980634562789910752}
-  shell: {fileID: 4645177225090889975, guid: fe87f808be5192042bcf53c53f900f20, type: 3}
-  aimSpeed: 5
 --- !u!1 &5621780920694568287
 GameObject:
   m_ObjectHideFlags: 0

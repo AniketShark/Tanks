@@ -7,14 +7,17 @@ public class Tank : MonoBehaviour, IPoolable
 {
 	public Motor motor;
 	public Barrel barrel;
-	public PlayerInput input;
+	private Health health; 
 
+	private PlayerInput input;
 	private Vector3 currentMousePos;
 	private Vector3 lastMouseMovePos;
 	private Vector2 moveDirection;
-	private bool move;
+	public bool Move { get; set; }
+	public Vector2 MoveDirection { get { return moveDirection; } set { moveDirection = value; } }
 	private bool aim;
 
+	#region Pooling
 	public IObjectPool PoolParent { get; set; }
 
 	public void Init(IObjectPool objetctPool)
@@ -22,52 +25,7 @@ public class Tank : MonoBehaviour, IPoolable
 		PoolParent = objetctPool;
 		barrel.Init(PoolParent);
 		input = GetComponent<PlayerInput>();
-	}
-
-	public void Destroy()
-	{
-		Return();
-	}
-
-	private void Update()
-	{
-		if(move)
-		{
-			motor.Move(moveDirection);
-		}
-	}
-
-	public void OnSpecial(InputAction.CallbackContext context)
-	{
-	}
-
-	public void OnFire(InputAction.CallbackContext context)
-	{
-		if(context.performed) barrel.FireShell();
-	}
-
-	public void OnMove(InputAction.CallbackContext context)
-	{
-		move = context.performed;
-		moveDirection = context.ReadValue<Vector2>();
-	}
-
-	public void OnAim(InputAction.CallbackContext context)
-	{
-
-		if(context.control.name == "rightStick")
-		{
-			print(context.ReadValue<Vector2>());
-			barrel.AimUsingDirection(context.ReadValue<Vector2>());
-		}
-		else
-		{
-			Vector3 lookVector = CameraUtility.MouseToWorldHitPoint(context.ReadValue<Vector2>());
-			lookVector = lookVector - transform.position;
-			lookVector.y = lookVector.z;
-			lookVector = lookVector.normalized;
-			barrel.AimUsingDirection(lookVector);
-		}
+		health = GetComponent<Health>();
 	}
 
 	public void Return()
@@ -75,4 +33,18 @@ public class Tank : MonoBehaviour, IPoolable
 		gameObject.SetActive(false);
 		PoolParent.ReturnToPool(gameObject);
 	}
+
+	#endregion
+
+	#region Unity Events
+
+	private void Update()
+	{
+		if(Move)
+		{
+			motor.Move(moveDirection);
+		}
+	}
+
+	#endregion
 }

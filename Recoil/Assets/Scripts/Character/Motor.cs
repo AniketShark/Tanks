@@ -18,4 +18,5 @@ public class Motor : MonoBehaviour
 		transform.position += lookDirection * speed * Time.deltaTime * moveDirection.magnitude;
 		lookDirection = transform.forward;
 	}
+
 }
