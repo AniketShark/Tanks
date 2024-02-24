@@ -3,34 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObjectPooling;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class GameDirector : MonoBehaviour
 {
     // Object Pool
     [SerializeField]
-    private Transform objectPoolContainer;
+    private Transform _objectPoolContainer;
     [SerializeField]
-    private ObjectPoolInfo objectPoolInfo;
-
-    private IObjectPool objectPool;
+    private ObjectPoolInfo _objectPoolInfo;
+    private ObjectPool _objectPool;
+    
+    // Player Management
+    [SerializeField]
+    private GameObject _playerPrefab;
+    private PlayerManager _playerManager;
+	private PlayerInputManager _playerInputManager;
 
     void Awake()
-    {  
-        //Creating Essential Objects
-        objectPool = new ObjectPool();
-        // Injecting Dependencies
-        objectPool.Initialize(objectPoolContainer, objectPoolInfo);
-    }
-
-    public void OnPlayerJoined(PlayerInput input)
     {
-        Debug.LogFormat("Player Joined {0} Player Id : {1}", input.GetInstanceID(),input.name);
-        input.GetComponent<Tank>().Init(objectPool);
-    }
-
-	public void OnPlayerLeft(PlayerInput input)
-	{
-		Debug.LogFormat("Player Joined {0} Player Id : {1}", input.GetInstanceID(), input.name);
+        //Creating Essential Objects
+        _objectPool = new ObjectPool();
+        _playerManager = new PlayerManager();
+	    _playerInputManager = GetComponent<PlayerInputManager>();
+        _playerInputManager.playerPrefab = _playerPrefab;
+        
+        // Injecting Dependencies
+		_objectPool.Initialize(_objectPoolContainer, _objectPoolInfo);
+        _playerManager.Initialize(_playerInputManager, _objectPool);
 	}
 
+	private void OnDestroy()
+	{
+		_playerManager.Reset();
+	}
 }

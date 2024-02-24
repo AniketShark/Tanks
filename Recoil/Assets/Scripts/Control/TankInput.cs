@@ -1,10 +1,5 @@
-using ObjectPooling;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
 
@@ -16,6 +11,9 @@ public class TankInput : MonoBehaviour
 	private InputAction moveAction;
 	private InputAction fireAction;
 	private InputAction specialAction;
+	private Motor motor;
+	private Tank tank;
+	private Barrel barrel;
 
 	public void OnEnable()
 	{
@@ -29,45 +27,43 @@ public class TankInput : MonoBehaviour
 		}
 
 		aimAction.performed += OnAim; 
-		moveAction.performed += OnMove; 
 		fireAction.performed += OnFire;
 		specialAction.performed += OnSpecial;
+
+		barrel = gameObject.GetComponent<Barrel>();
+		motor  = gameObject.GetComponent<Motor>();
+		tank   = gameObject.GetComponent<Tank>();
+
 	}
 
 	private void OnDisable()
 	{
 		aimAction.performed -= OnAim;
-		moveAction.performed -= OnMove;
 		fireAction.performed -= OnFire;
 		specialAction.performed -= OnSpecial;
 	}
 
 	private void Update()
 	{
-		gameObject.GetComponent<Tank>().Move = moveAction.IsPressed();
-		gameObject.GetComponent<Tank>().MoveDirection = moveAction.ReadValue<Vector2>();
+		tank.Move = moveAction.IsPressed();
+		tank.MoveDirection = moveAction.ReadValue<Vector2>();
 	}
 
 	public void OnSpecial(InputAction.CallbackContext context)
 	{
-		if (context.performed) gameObject.GetComponent<Barrel>().FireShell();
+		if (context.performed) barrel.FireShell();
 	}
 
 	public void OnFire(InputAction.CallbackContext context)
 	{
-		if (context.performed) gameObject.GetComponent<Barrel>().FireShell();
-	}
-
-	public void OnMove(InputAction.CallbackContext context)
-	{
-		
+		if (context.performed) barrel.FireShell();
 	}
 
 	public void OnAim(InputAction.CallbackContext context)
 	{
 		if (context.control.name == "rightStick")
 		{
-			gameObject.GetComponent<Barrel>().AimUsingDirection(context.ReadValue<Vector2>());
+			barrel.AimUsingDirection(context.ReadValue<Vector2>());
 		}
 		else
 		{
@@ -75,7 +71,7 @@ public class TankInput : MonoBehaviour
 			lookVector = lookVector - transform.position;
 			lookVector.y = lookVector.z;
 			lookVector = lookVector.normalized;
-			gameObject.GetComponent<Barrel>().AimUsingDirection(lookVector);
+			barrel.AimUsingDirection(lookVector);
 		}
 	}
 }

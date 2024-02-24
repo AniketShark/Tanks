@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Search;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace ObjectPooling
 {
@@ -16,17 +11,17 @@ namespace ObjectPooling
 		void ReturnToPool(GameObject go);
 	}
 
-	public class ObjectPool : IObjectPool
+	public class ObjectPool
 	{
 		public  ObjectPoolInfo poolInfoAsset;
-		private Dictionary<Type, Queue<GameObject>> pool;
-		private Dictionary<Type, PrefabInfo> poolInfoDictionary;
-		private Transform containerTransform;
+		private Dictionary<Type, Queue<GameObject>> _pool;
+		private Dictionary<Type, PrefabInfo> _poolInfoDictionary;
+		private Transform _containerTransform;
 
 		private GameObject CreatePoolObject(Type type)
 		{
-			var prefabInfo = poolInfoDictionary[type];
-			var instance = GameObject.Instantiate(prefabInfo.prefab, containerTransform);
+			var prefabInfo = _poolInfoDictionary[type];
+			var instance = GameObject.Instantiate(prefabInfo.prefab, _containerTransform);
 			instance.GetComponent<IPoolable>().Init(this);
 			instance.SetActive(false);
 			return instance;
@@ -34,36 +29,38 @@ namespace ObjectPooling
 		public void Initialize(Transform containerTransform,ObjectPoolInfo poolInfoAsset)
 		{
 			this.poolInfoAsset = poolInfoAsset;
-			this.containerTransform = containerTransform;
+			this._containerTransform = containerTransform;
 
-			if (pool == null)
-				pool = new Dictionary<Type, Queue<GameObject>>();
-			if (poolInfoDictionary == null)
-				poolInfoDictionary = new Dictionary<Type, PrefabInfo>();
+			if (_pool == null)
+				_pool = new Dictionary<Type, Queue<GameObject>>();
+			if (_poolInfoDictionary == null)
+				_poolInfoDictionary = new Dictionary<Type, PrefabInfo>();
 
 			for (int j = 0; j < poolInfoAsset.pooledObjects.Count; j++)
 			{
 				PrefabInfo item = poolInfoAsset.pooledObjects[j];
 				Type t = item.prefab.GetComponent<IPoolable>().GetType();
-				if (!poolInfoDictionary.ContainsKey(t))
+				if (!_poolInfoDictionary.ContainsKey(t))
 				{
-					poolInfoDictionary[t] = item;
-					pool.Add(t, new Queue<GameObject>());
+					_poolInfoDictionary[t] = item;
+					_pool.Add(t, new Queue<GameObject>());
 				}
-				var queue = pool[t];
+				var queue = _pool[t];
 				for (int i = 0; i < item.instances; i++)
 				{
-					pool[t].Enqueue(CreatePoolObject(t));
+					var go = CreatePoolObject(t);
+					go.name += i;
+					_pool[t].Enqueue(go);
 				}
 			}
 		}
 		public GameObject GetPooledObject(Type type)
 		{
-			if (pool.ContainsKey(type))
+			if (_pool.ContainsKey(type))
 			{
-				if (pool[type].Count > 0)
+				if (_pool[type].Count > 0)
 				{
-					var go = pool[type].Dequeue();
+					var go = _pool[type].Dequeue();
 					go.transform.SetParent(null);
 					return go;
 				}
@@ -74,16 +71,16 @@ namespace ObjectPooling
 					return go;
 				}
 			}
-
 			Debug.LogErrorFormat("{0} type is not in Pooled Objects", type);
 			return null;
 		}
+
 		public void ReturnToPool(GameObject go)
 		{
 			go.SetActive(false);
 			Type t = go.GetComponent<IPoolable>().GetType();
-			go.transform.SetParent(containerTransform);
-			pool[t].Enqueue(go);
+			go.transform.SetParent(_containerTransform);
+			_pool[t].Enqueue(go);
 		}
 
 	}

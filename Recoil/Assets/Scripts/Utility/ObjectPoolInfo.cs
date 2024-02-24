@@ -7,8 +7,8 @@ namespace ObjectPooling
 {
 	public interface IPoolable
 	{
-		public void Init(IObjectPool objetctPool);
-		IObjectPool PoolParent { get; set; }
+		public void Init(ObjectPool objetctPool);
+		ObjectPool PoolParent { get; set; }
 		void Return();
 	}
 
