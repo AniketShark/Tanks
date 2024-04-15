@@ -45,10 +45,10 @@ GameObject:
   - component: {fileID: 6222117377927489345}
   - component: {fileID: 7039491462026502946}
   - component: {fileID: 6936607168055609104}
-  - component: {fileID: 5655436908487278069}
   - component: {fileID: 3387506224049069072}
   - component: {fileID: 4281967901605627604}
   - component: {fileID: 7432491585068384235}
+  - component: {fileID: 5655436908487278069}
   - component: {fileID: 8094859535367849075}
   m_Layer: 7
   m_Name: Tank
@@ -186,18 +186,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   motor: {fileID: 3387506224049069072}
   barrel: {fileID: 4281967901605627604}
---- !u!114 &5655436908487278069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3680386741314470004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58413dc584d21694e97a77025d4163c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3387506224049069072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,6 +275,18 @@ MonoBehaviour:
   m_DefaultActionMap: Tank
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &5655436908487278069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3680386741314470004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58413dc584d21694e97a77025d4163c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8094859535367849075
 MonoBehaviour:
   m_ObjectHideFlags: 0

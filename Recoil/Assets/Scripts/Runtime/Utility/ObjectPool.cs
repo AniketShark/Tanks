@@ -74,7 +74,6 @@ namespace ObjectPooling
 			Debug.LogErrorFormat("{0} type is not in Pooled Objects", type);
 			return null;
 		}
-
 		public void ReturnToPool(GameObject go)
 		{
 			go.SetActive(false);

@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using ObjectPooling;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting;
+using Game.Runtime.Network;
 
 public class GameDirector : MonoBehaviour
 {
@@ -31,9 +29,18 @@ public class GameDirector : MonoBehaviour
         // Injecting Dependencies
 		_objectPool.Initialize(_objectPoolContainer, _objectPoolInfo);
         _playerManager.Initialize(_playerInputManager, _objectPool);
-	}
 
-	private void OnDestroy()
+        Invoke("ConnectToServer", 2);
+    }
+
+    private void ConnectToServer()
+    {
+        Debug.Log("Connect To Game Server ");
+        Client.Instance.ConnectToServer();
+        CancelInvoke();
+    }
+
+    private void OnDestroy()
 	{
 		_playerManager.Reset();
 	}

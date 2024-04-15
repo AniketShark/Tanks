@@ -2,8 +2,10 @@ using UnityEngine;
 using ObjectPooling;
 public class Shell : MonoBehaviour, IPoolable
 {
-	public float speed;
-	public float damage;
+	[SerializeField]
+	private float _speed;
+	[SerializeField]
+	private float _damage;
 	public ObjectPool PoolParent { get; set; }
 	public void Init(ObjectPool objetctPool)
 	{
@@ -18,7 +20,7 @@ public class Shell : MonoBehaviour, IPoolable
 
 	public void Move(Vector3 direction)
 	{
-		transform.position += direction * speed * Time.deltaTime;
+		transform.position += direction * _speed * Time.deltaTime;
 	}
 
 	public void Update()
@@ -38,7 +40,7 @@ public class Shell : MonoBehaviour, IPoolable
 		Debug.LogFormat("{0} collided with {1} ",gameObject.name,collision.gameObject.name);
 		var health = collision.gameObject.GetComponent<Health>();
 		if(health)
-			health.Damage(damage);
+			health.Damage(_damage);
 		Return();
 	}
 
