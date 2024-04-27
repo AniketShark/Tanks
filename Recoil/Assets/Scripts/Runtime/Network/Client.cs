@@ -39,6 +39,14 @@ namespace Game.Runtime.Network
 			_tcp.Send(packet);
 		}
 
+		private void Update()
+		{
+			if (_tcp?.client?.Connected != null) 
+			{
+				_tcp.Receive();
+			}
+		}
+
 		private void OnDestroy()
 		{
 			_tcp.Disconnect();
@@ -79,21 +87,29 @@ namespace Game.Runtime.Network
 			catch (Exception ex)
 			{
 				Debug.Log(ex.Message);
-				//TODO: Disconnect the client
-				client.Close();
+				_networkStream?.Close();
+				client?.Close();
 			}
 
 		}
 
 		public async void Receive()
 		{
-			NetworkStream stream = client.GetStream();
-			int byte_count = await stream.ReadAsync(_dataBuffer, 0, _dataBuffer.Length);
-			if (byte_count > 0)
+			try
 			{
-				Packet packet = new Packet();
-				packet.WriteBytes(_dataBuffer);
-				Debug.Log(packet.ReadString());
+				int byte_count = await _networkStream.ReadAsync(_dataBuffer, 0, _dataBuffer.Length);
+				if (byte_count > 0)
+				{
+					Packet packet = new Packet();
+					packet.WriteBytes(_dataBuffer);
+					Debug.LogError(packet.ReadString());
+				}
+			}
+			catch(Exception ex)
+			{
+				Debug.LogException(ex);
+				_networkStream?.Close();
+				client?.Close();
 			}
 		}
 
@@ -105,7 +121,7 @@ namespace Game.Runtime.Network
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				Debug.LogException(ex);
 				//TODO: Disconnect the client
 				client.Close();
 			}
@@ -114,8 +130,8 @@ namespace Game.Runtime.Network
 
 		public void Disconnect()
 		{
-			_networkStream.Close();
-			client.Close();
+			_networkStream?.Close();
+			client?.Close();
 		}
 
 
@@ -125,6 +141,8 @@ namespace Game.Runtime.Network
 
 			if (!client.Connected)
 				return;
+
+			Debug.Log("Connected to Server");
 
 			_networkStream = client.GetStream();
 			_networkStream.BeginRead(_dataBuffer, 0, Client.DATA_BUFFER_SIZE, ReceiveCallback, null);
@@ -142,11 +160,9 @@ namespace Game.Runtime.Network
 				}
 				byte[] bytes = new byte[byteLength];
 				Array.Copy(_dataBuffer, bytes, bytes.Length);
-				//TODO : handle data
 				Packet packet = new Packet();
 				packet.WriteBytes(bytes);
 				Debug.Log(packet.ReadString());
-
 				_networkStream.BeginRead(_dataBuffer, 0, bytes.Length, ReceiveCallback, null);
 			}
 			catch (Exception ex)
